@@ -1,0 +1,62 @@
+Emulator=TcpSocket.New()
+Emulator.ReadTimeout=0
+Emulator.WriteTimeout=0
+Emulator.ReconnectTimeout=5
+
+tv1ip=Controls.Inputs[1]
+tv2ip=Controls.Inputs[2]
+tv3ip=Controls.Inputs[3]
+tv4ip=Controls.Inputs[4]
+
+
+
+
+Port=9761
+
+
+
+function ShowFeedback(socket, event, err)
+  if event==TcpSocket.Events.Data
+  then
+    Feedback=Emulator:ReadLine((TcpSocket.EOL.Any))
+    print(Feedback)
+
+  end
+end
+
+function PowerOn()
+Emulator:Write("C8 31")
+end
+
+function PowerOff()
+Emulator:Write("C8 30")
+end
+
+
+Emulator.EventHandler=ShowFeedback
+
+Controls.Inputs[7].EventHandler=function(on)
+PowerOn()
+on.Boolean=true
+status=string.gsub(Feedback, "Power is On")
+print(status)
+end
+
+Controls.Inputs[5].EventHandler=function(off)
+PowerOff()
+off.Boolean=false
+end
+
+Controls.Inputs[6].EventHandler=function(pow)
+  if pow.Boolean then 
+  PowerOn()
+    else PowerOff()
+  end
+end
+
+
+
+Emulator:Connect(tv1ip.String,Port)
+Emulator:Connect(tv2ip.String,Port)
+Emulator:Connect(tv3ip.String,Port)
+Emulator:Connect(tv4ip.String,Port)
