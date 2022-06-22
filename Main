@@ -1,7 +1,7 @@
-Emulator=TcpSocket.New()
-Emulator.ReadTimeout=0
-Emulator.WriteTimeout=0
-Emulator.ReconnectTimeout=5
+TVs=TcpSocket.New()
+TVs.ReadTimeout=0
+TVs.WriteTimeout=0
+TVs.ReconnectTimeout=5
 
 tv1ip=Controls.Inputs[1]
 tv2ip=Controls.Inputs[2]
@@ -18,22 +18,22 @@ Port=9761
 function ShowFeedback(socket, event, err)
   if event==TcpSocket.Events.Data
   then
-    Feedback=Emulator:ReadLine((TcpSocket.EOL.Any))
+    Feedback=TVs:ReadLine((TcpSocket.EOL.Any))
     print(Feedback)
 
   end
 end
 
 function PowerOn()
-Emulator:Write("C8 31")
+TVs:Write("C8 31")
 end
 
 function PowerOff()
-Emulator:Write("C8 30")
+TVs:Write("C8 30")
 end
 
 
-Emulator.EventHandler=ShowFeedback
+TVs.EventHandler=ShowFeedback
 
 Controls.Inputs[7].EventHandler=function(on)
 PowerOn()
@@ -56,7 +56,7 @@ end
 
 
 
-Emulator:Connect(tv1ip.String,Port)
-Emulator:Connect(tv2ip.String,Port)
-Emulator:Connect(tv3ip.String,Port)
-Emulator:Connect(tv4ip.String,Port)
+TVs:Connect(tv1ip.String,Port)
+TVs:Connect(tv2ip.String,Port)
+TVs:Connect(tv3ip.String,Port)
+TVs:Connect(tv4ip.String,Port)
